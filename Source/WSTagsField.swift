@@ -100,11 +100,10 @@ open class WSTagsField: UIScrollView {
         }
     }
 
-    /// If you use images in label it's better to set this layoutMargins over the default one.
-    open var baseLayoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)  {
-        didSet {
-            layoutMargins = baseLayoutMargins
-        }
+    private func layoutMarginsWith(image: UIImage) -> UIEdgeInsets {
+        let leftMargin = self.layoutMargins.left + image.size.width + spaceBetweenImageAndLabel
+        return UIEdgeInsets(top: self.layoutMargins.top, left: leftMargin,
+                            bottom: self.layoutMargins.bottom, right: self.layoutMargins.right)
     }
     
     open override var layoutMargins: UIEdgeInsets {
@@ -378,16 +377,13 @@ open class WSTagsField: UIScrollView {
         tagView.layoutMargins = self.layoutMargins
 
         if let image = tag.image {
-            let leftMargin = self.baseLayoutMargins.left + image.size.width + spaceBetweenImageAndLabel
-            self.layoutMargins = UIEdgeInsets(top: self.layoutMargins.top, left: leftMargin,
-                                              bottom: self.layoutMargins.bottom, right: self.layoutMargins.right)
-            tagView.layoutMargins = self.layoutMargins
+            tagView.layoutMargins = layoutMarginsWith(image: image)
             let imageView = UIImageView(image: image)
             
             // calculate new view frame
             let maxWidth: CGFloat = preferredMaxLayoutWidth - contentInset.left - contentInset.right
             let finalHeight = tagView.sizeToFit(.init(width: maxWidth, height: 0)).height
-            imageView.frame = CGRect(x: self.baseLayoutMargins.left, y: ((finalHeight - image.size.height)/2),
+            imageView.frame = CGRect(x: self.layoutMargins.left, y: ((finalHeight - image.size.height)/2),
                                      width: image.size.width, height: image.size.height)
             imageView.contentMode = .center
             
@@ -606,7 +602,6 @@ extension WSTagsField {
 
         clipsToBounds = true
 
-        baseLayoutMargins = layoutMargins
         textField.backgroundColor = .clear
         textField.autocorrectionType = UITextAutocorrectionType.no
         textField.autocapitalizationType = UITextAutocapitalizationType.none
