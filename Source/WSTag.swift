@@ -11,9 +11,11 @@ import Foundation
 public struct WSTag: Hashable {
 
     public let text: String
+    public let image: UIImage?
 
-    public init(_ text: String) {
+    public init(_ text: String, image: UIImage? = nil) {
         self.text = text
+        self.image = image
     }
 
     public var hashValue: Int {

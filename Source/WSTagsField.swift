@@ -100,6 +100,13 @@ open class WSTagsField: UIScrollView {
         }
     }
 
+    /// If you use images in label it's better to set this layoutMargins over the default one.
+    open var baseLayoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)  {
+        didSet {
+            layoutMargins = baseLayoutMargins
+        }
+    }
+    
     open override var layoutMargins: UIEdgeInsets {
         didSet {
             tagViews.forEach { $0.layoutMargins = self.layoutMargins }
@@ -179,6 +186,8 @@ open class WSTagsField: UIScrollView {
         }
     }
 
+    open var spaceBetweenImageAndLabel: CGFloat = 8.0
+
     open override var isFirstResponder: Bool {
         guard super.isFirstResponder == false, textField.isFirstResponder == false else {
             return true
@@ -230,6 +239,11 @@ open class WSTagsField: UIScrollView {
      * frames to make sure the tag view still fits.
      */
     open var onDidChangeHeightTo: ((WSTagsField, _ height: CGFloat) -> Void)?
+
+    /**
+     * Called when before adding a tag to be able to set an image
+     */
+    open var willAddTagShouldSetImage: ((WSTagsField, _ text: String) -> UIImage?)?
 
     // MARK: - Properties
 
@@ -337,7 +351,7 @@ open class WSTagsField: UIScrollView {
     }
 
     open func addTag(_ tag: String) {
-        addTag(WSTag(tag))
+        addTag(WSTag(tag, image: willAddTagShouldSetImage?(self, tag)))
     }
 
     open func addTag(_ tag: WSTag) {
@@ -363,6 +377,23 @@ open class WSTagsField: UIScrollView {
         tagView.keyboardAppearanceType = self.keyboardAppearance
         tagView.layoutMargins = self.layoutMargins
 
+        if let image = tag.image {
+            let leftMargin = self.baseLayoutMargins.left + image.size.width + spaceBetweenImageAndLabel
+            self.layoutMargins = UIEdgeInsets(top: self.layoutMargins.top, left: leftMargin,
+                                              bottom: self.layoutMargins.bottom, right: self.layoutMargins.right)
+            tagView.layoutMargins = self.layoutMargins
+            let imageView = UIImageView(image: image)
+            
+            // calculate new view frame
+            let maxWidth: CGFloat = preferredMaxLayoutWidth - contentInset.left - contentInset.right
+            let finalHeight = tagView.sizeToFit(.init(width: maxWidth, height: 0)).height
+            imageView.frame = CGRect(x: self.baseLayoutMargins.left, y: ((finalHeight - image.size.height)/2),
+                                     width: image.size.width, height: image.size.height)
+            imageView.contentMode = .center
+            
+            tagView.addSubview(imageView)
+        }
+        
         tagView.onDidRequestSelection = { [weak self] tagView in
             self?.selectTagView(tagView, animated: true)
         }
@@ -434,7 +465,7 @@ open class WSTagsField: UIScrollView {
     open func tokenizeTextFieldText() -> WSTag? {
         let text = self.textField.text?.trimmingCharacters(in: CharacterSet.whitespaces) ?? ""
         if text.isEmpty == false && (onVerifyTag?(self, text) ?? true) {
-            let tag = WSTag(text)
+            let tag = WSTag(text, image: willAddTagShouldSetImage?(self, text))
             addTag(tag)
 
             self.textField.text = ""
@@ -575,6 +606,7 @@ extension WSTagsField {
 
         clipsToBounds = true
 
+        baseLayoutMargins = layoutMargins
         textField.backgroundColor = .clear
         textField.autocorrectionType = UITextAutocorrectionType.no
         textField.autocapitalizationType = UITextAutocapitalizationType.none
