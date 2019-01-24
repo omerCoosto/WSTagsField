@@ -10,20 +10,22 @@ import Foundation
 
 public struct WSTag: Hashable {
 
+    public let id: UInt64
     public let text: String
     public let image: UIImage?
 
-    public init(_ text: String, image: UIImage? = nil) {
+    public init(id: UInt64, text: String, image: UIImage? = nil) {
+        self.id = id
         self.text = text
         self.image = image
     }
 
     public var hashValue: Int {
-        return self.text.hashValue
+        return self.id.hashValue
     }
 
     public func equals(_ other: WSTag) -> Bool {
-        return self.text == other.text
+        return self.id == other.id
     }
 
 }

@@ -104,8 +104,8 @@ extension ViewController {
             print("onDidAddTag")
         }
         
-        tagsField.willAddTagShouldSetImage = { _, text in
-            return text == "image" || text == "aaa" || text == "bbb" ? #imageLiteral(resourceName: "instagram") : nil
+        tagsField.willAddTagShouldSetImage = { _, id in
+            return id % 2 == 0 ? #imageLiteral(resourceName: "instagram") : nil
         }
 
         tagsField.onDidRemoveTag = { _, _ in

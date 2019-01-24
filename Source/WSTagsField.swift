@@ -17,6 +17,9 @@ public enum WSTagAcceptOption {
 open class WSTagsField: UIScrollView {
     fileprivate let textField = BackspaceDetectingTextField()
 
+     // use only this ID automatically or set for each tag your own tag Id
+    private static var customID: UInt64 = 0
+    
     /// Dedicated text field delegate.
     open weak var textDelegate: UITextFieldDelegate?
 
@@ -242,7 +245,7 @@ open class WSTagsField: UIScrollView {
     /**
      * Called when before adding a tag to be able to set an image
      */
-    open var willAddTagShouldSetImage: ((WSTagsField, _ text: String) -> UIImage?)?
+    open var willAddTagShouldSetImage: ((WSTagsField, _ id: UInt64) -> UIImage?)?
 
     // MARK: - Properties
 
@@ -342,15 +345,23 @@ open class WSTagsField: UIScrollView {
 
     // MARK: - Adding / Removing Tags
     open func addTags(_ tags: [String]) {
-        tags.forEach { addTag($0) }
+        tags.forEach {
+            addTag(id: WSTagsField.customID, tag: $0)
+            WSTagsField.customID += 1
+        }
     }
 
     open func addTags(_ tags: [WSTag]) {
         tags.forEach { addTag($0) }
     }
 
-    open func addTag(_ tag: String) {
-        addTag(WSTag(tag, image: willAddTagShouldSetImage?(self, tag)))
+    open func addTag(_ tag: String, image: UIImage? = nil) {
+        addTag(WSTag(id: WSTagsField.customID, text: tag, image: image))
+        WSTagsField.customID += 1
+    }
+    
+    open func addTag(id: UInt64, tag: String, image: UIImage? = nil) {
+        addTag(WSTag(id: id, text: tag, image: image))
     }
 
     open func addTag(_ tag: WSTag) {
@@ -428,8 +439,8 @@ open class WSTagsField: UIScrollView {
         repositionViews()
     }
 
-    open func removeTag(_ tag: String) {
-        removeTag(WSTag(tag))
+    open func removeTag(id: UInt64) {
+        removeTag(WSTag(id: id, text: ""))
     }
 
     open func removeTag(_ tag: WSTag) {
@@ -461,7 +472,9 @@ open class WSTagsField: UIScrollView {
     open func tokenizeTextFieldText() -> WSTag? {
         let text = self.textField.text?.trimmingCharacters(in: CharacterSet.whitespaces) ?? ""
         if text.isEmpty == false && (onVerifyTag?(self, text) ?? true) {
-            let tag = WSTag(text, image: willAddTagShouldSetImage?(self, text))
+            let tag = WSTag(id: WSTagsField.customID, text: text,
+                            image: willAddTagShouldSetImage?(self, WSTagsField.customID))
+            WSTagsField.customID += 1
             addTag(tag)
 
             self.textField.text = ""
