@@ -25,15 +25,16 @@ class ViewController: UIViewController {
         //tagsField.heightAnchor.constraint(equalToConstant: 150).isActive = true
 
         tagsField.cornerRadius = 3.0
-        tagsField.spaceBetweenLines = 10
-        tagsField.spaceBetweenTags = 10
+        tagsField.spaceBetweenLines = 5.0
+        tagsField.spaceBetweenTags = 4.0
 
         //tagsField.numberOfLines = 3
         //tagsField.maxHeight = 100.0
 
-        tagsField.layoutMargins = UIEdgeInsets(top: 2, left: 6, bottom: 2, right: 6)
-        tagsField.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10) //old padding
+        tagsField.layoutMargins = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
+        tagsField.contentInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 
+        tagsField.font = UIFont.systemFont(ofSize: 12)
         tagsField.placeholder = "Enter a tag"
         tagsField.placeholderColor = .red
         tagsField.placeholderAlwaysVisible = true
@@ -101,6 +102,10 @@ extension ViewController {
     fileprivate func textFieldEvents() {
         tagsField.onDidAddTag = { _, _ in
             print("onDidAddTag")
+        }
+        
+        tagsField.willAddTagShouldSetImage = { _, text in
+            return text == "image" || text == "aaa" || text == "bbb" ? #imageLiteral(resourceName: "instagram") : nil
         }
 
         tagsField.onDidRemoveTag = { _, _ in
