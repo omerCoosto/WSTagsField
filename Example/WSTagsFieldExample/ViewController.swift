@@ -21,15 +21,16 @@ class ViewController: UIViewController {
         tagsField.frame = tagsView.bounds
         tagsView.addSubview(tagsField)
 
-        //tagsField.translatesAutoresizingMaskIntoConstraints = false
-        //tagsField.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        tagsField.translatesAutoresizingMaskIntoConstraints = false
+        tagsField.heightAnchor.constraint(equalToConstant: 80).isActive = true
 
+        tagsField.isScrollEnabled = true
         tagsField.cornerRadius = 3.0
         tagsField.spaceBetweenLines = 5.0
         tagsField.spaceBetweenTags = 4.0
 
         //tagsField.numberOfLines = 3
-        //tagsField.maxHeight = 100.0
+        tagsField.maxHeight = 80
 
         tagsField.layoutMargins = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8)
         tagsField.contentInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)

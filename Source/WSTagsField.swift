@@ -437,8 +437,15 @@ open class WSTagsField: UIScrollView {
 
         updatePlaceholderTextVisibility()
         repositionViews()
+        updateContentOffset()
     }
-
+    
+    private func updateContentOffset() {
+        let bottomY = contentSize.height - bounds.size.height + contentInset.bottom
+        guard bottomY > 0 else { return }
+        self.setContentOffset(CGPoint(x: contentOffset.x, y: bottomY), animated: true)
+    }
+    
     open func removeTag(id: UInt64) {
         removeTag(WSTag(id: id, text: ""))
     }
