@@ -375,12 +375,12 @@ open class WSTagsField: UIScrollView {
     }
 
     open func addTag(_ tag: String, image: UIImage? = nil) {
-        addTag(WSTag(id: WSTagsField.customID, text: tag, image: image))
+        addTag(WSTag(tag, context: WSTagsField.customID, image: image))
         WSTagsField.customID += 1
     }
     
     open func addTag(id: UInt64, tag: String, image: UIImage? = nil) {
-        addTag(WSTag(id: id, text: tag, image: image))
+        addTag(WSTag(tag, context: id, image: image))
     }
 
     open func addTag(_ tag: WSTag) {
@@ -466,7 +466,7 @@ open class WSTagsField: UIScrollView {
     }
     
     open func removeTag(id: UInt64) {
-        removeTag(WSTag(id: id, text: ""))
+        removeTag(WSTag("", context: id))
     }
 
     open func removeTag(_ tag: WSTag) {
@@ -498,7 +498,8 @@ open class WSTagsField: UIScrollView {
     open func tokenizeTextFieldText() -> WSTag? {
         let text = self.textField.text?.trimmingCharacters(in: CharacterSet.whitespaces) ?? ""
         if text.isEmpty == false && (onVerifyTag?(self, text) ?? true) {
-            let tag = WSTag(id: WSTagsField.customID, text: text,
+            
+            let tag = WSTag(text, context: WSTagsField.customID,
                             image: willAddTagShouldSetImage?(self, WSTagsField.customID))
             WSTagsField.customID += 1
             addTag(tag)
