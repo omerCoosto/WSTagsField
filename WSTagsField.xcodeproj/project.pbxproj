@@ -393,6 +393,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.whitesmith.WSTagsField;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SHARED_BUILD_NUMBER = 2019.10.21.14.52;
+				SHARED_VERSION_NUMBER = 5.1.2;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -415,6 +417,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.whitesmith.WSTagsField;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SHARED_BUILD_NUMBER = 2019.10.21.14.52;
+				SHARED_VERSION_NUMBER = 5.1.2;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 			};
