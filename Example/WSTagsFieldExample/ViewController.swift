@@ -40,12 +40,10 @@ class ViewController: UIViewController {
         tagsField.placeholderColor = .red
         tagsField.placeholderAlwaysVisible = true
         tagsField.backgroundColor = .lightGray
-        tagsField.returnKeyType = .next
+        tagsField.returnKeyType = .continue
         tagsField.delimiter = ""
-        tagsField.keyboardAppearance = .dark
 
         tagsField.textDelegate = self
-        //tagsField.acceptTagOption = .space
 
         textFieldEvents()
     }
@@ -83,6 +81,8 @@ class ViewController: UIViewController {
         tagsField.placeholderColor = .green
         tagsField.placeholderAlwaysVisible = false
         tagsField.font = UIFont.systemFont(ofSize: 9)
+        tagsField.keyboardAppearance = .dark
+        tagsField.acceptTagOption = .space
     }
 
     @IBAction func touchAddRandomTags(_ sender: UIButton) {
@@ -101,16 +101,16 @@ class ViewController: UIViewController {
 extension ViewController {
 
     fileprivate func textFieldEvents() {
-        tagsField.onDidAddTag = { _, _ in
-            print("onDidAddTag")
+        tagsField.onDidAddTag = { field, tag in
+            print("onDidAddTag", tag.text)
         }
         
         tagsField.willAddTagShouldSetImage = { _, id in
             return id % 2 == 0 ? #imageLiteral(resourceName: "instagram") : nil
         }
 
-        tagsField.onDidRemoveTag = { _, _ in
-            print("onDidRemoveTag")
+        tagsField.onDidRemoveTag = { field, tag in
+            print("onDidRemoveTag", tag.text)
         }
 
         tagsField.onDidChangeText = { _, text in
@@ -127,6 +127,10 @@ extension ViewController {
 
         tagsField.onDidUnselectTagView = { _, tagView in
             print("Unselect \(tagView)")
+        }
+
+        tagsField.onShouldAcceptTag = { field in
+            return field.text != "OMG"
         }
     }
 
