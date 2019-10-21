@@ -21,7 +21,7 @@ public struct WSTag: Hashable {
     }
 
      public func equals(_ other: WSTag) -> Bool {
-         return self.text == other.text && self.context == other.context
+         return self.context == other.context
      }
 
 }
