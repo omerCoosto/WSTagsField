@@ -379,7 +379,7 @@ open class WSTagsField: UIScrollView {
         WSTagsField.customID += 1
     }
     
-    open func addTag(id: UInt64, tag: String, image: UIImage? = nil) {
+    open func addTag(id: AnyHashable, tag: String, image: UIImage? = nil) {
         addTag(WSTag(tag, context: id, image: image))
     }
 
@@ -465,7 +465,7 @@ open class WSTagsField: UIScrollView {
         self.setContentOffset(CGPoint(x: contentOffset.x, y: bottomY), animated: true)
     }
     
-    open func removeTag(id: UInt64) {
+    open func removeTag(id: AnyHashable) {
         removeTag(WSTag("", context: id))
     }
 
